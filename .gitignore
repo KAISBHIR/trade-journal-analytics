@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Never commit real trade data
+*.csv
+*.htm
+*.html
+!trade_journal_app/templates/*.html
+
+.vscode/
+.idea/

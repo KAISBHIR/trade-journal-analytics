@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trade Journal Uploader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #0e1117;
+        color: #e8edf2;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+      }
+      .card {
+        width: min(720px, 100%);
+        background: #1a1d24;
+        border-radius: 16px;
+        box-shadow: 0 18px 40px rgba(15, 20, 35, 0.35);
+        padding: 36px;
+        display: grid;
+        gap: 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        color: #00ffc6;
+        text-align: center;
+      }
+      p.subtitle {
+        margin: 0 0 16px;
+        text-align: center;
+        color: #96a2b4;
+        font-size: 15px;
+      }
+      .status-bar {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #9aa7bd;
+        flex-wrap: wrap;
+      }
+      .status-bar span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .status-bar .done {
+        color: #00ffc6;
+        background: rgba(0, 255, 198, 0.08);
+      }
+      .message {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin: 0;
+        font-size: 14px;
+      }
+      .message a {
+        color: #8ca3ff;
+        text-decoration: underline;
+      }
+      .message.error {
+        background: rgba(255, 75, 75, 0.12);
+        border: 1px solid rgba(255, 75, 75, 0.4);
+        color: #ff9898;
+      }
+      .message.success {
+        background: rgba(0, 255, 198, 0.12);
+        border: 1px solid rgba(0, 255, 198, 0.35);
+        color: #8effe5;
+      }
+      .step {
+        background: #11141c;
+        border-radius: 14px;
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        display: grid;
+        gap: 16px;
+      }
+      .step h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #00ffc6;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .step p {
+        margin: 0;
+        color: #9ba7bf;
+        font-size: 14px;
+      }
+      .upload-input {
+        width: 100%;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        background: rgba(14, 17, 23, 0.65);
+        padding: 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #d3dae5;
+        transition: border-color 0.2s ease, transform 0.2s ease;
+      }
+      .upload-input:hover {
+        border-color: #00ffc6;
+        transform: translateY(-2px);
+      }
+      .upload-input input[type="file"] {
+        display: none;
+      }
+      form {
+        display: grid;
+        gap: 18px;
+      }
+      .strategies {
+        display: grid;
+        gap: 12px;
+      }
+      label {
+        font-size: 14px;
+        color: #aab6cc;
+        display: block;
+        margin-bottom: 6px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(12, 15, 22, 0.9);
+        color: #f5f7fb;
+        font-size: 14px;
+      }
+      button[type="submit"],
+      .cta-button {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 10px;
+        background: #00ffc6;
+        color: #061018;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: filter 0.2s ease, transform 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+      }
+      button[type="submit"]:hover,
+      .cta-button:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+      .cta-button.secondary {
+        background: transparent;
+        color: #8ca3ff;
+        border: 1px solid rgba(140, 163, 255, 0.4);
+      }
+      .step.disabled {
+        opacity: 0.45;
+      }
+      .step.disabled .cta-button,
+      .step.disabled button {
+        pointer-events: none;
+        filter: grayscale(60%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Trade Journal Analyzer</h1>
+      <p class="subtitle">
+        Upload your broker CSV, map strategies, and review interactive analytics in seconds.
+      </p>
+
+      <div class="step">
+        <h2>Step 1 — Upload your trade CSV</h2>
+        <p>Upload exports directly from your broker or MT4/MT5 statement. We’ll validate the columns automatically.</p>
+        <form action="/upload/" enctype="multipart/form-data" method="post">
+          <label class="upload-input">
+            <span id="upload-label">{{ uploaded_filename if uploaded_filename else "Click to choose your trade history CSV" }}</span>
+            <input name="file" id="file-input" type="file" accept=".csv" required />
+          </label>
+          <button type="submit">Upload trades</button>
+        </form>
+        {% if step_error[1] %}
+        <div class="message error">{{ step_error[1]|safe }}</div>
+        {% elif step_success[1] %}
+        <div class="message success">{{ step_success[1]|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="step {{ '' if has_data else 'disabled' }}">
+        <h2>Step 2 — Name your strategies</h2>
+        <p>{% if has_data %}Give each strategy a label so the dashboard can group performance for you.{% else %}Upload a CSV to unlock strategy naming.{% endif %}</p>
+        <form action="/save-strategies" method="post">
+          <div class="strategies">
+            {% for idx in range(1, 5) %}
+            <div>
+              <label>Strategy {{ idx }} name</label>
+              <input
+                type="text"
+                name="strategy{{ idx }}"
+                placeholder="Enter strategy {{ idx }} label"
+                value="{{ strategies[idx] }}"
+                {% if not has_data %}disabled{% endif %}
+              />
+            </div>
+            {% endfor %}
+          </div>
+          <button type="submit" {% if not has_data %}disabled{% endif %}>Save strategy names</button>
+        </form>
+        {% if step_error[2] %}
+        <div class="message error">{{ step_error[2]|safe }}</div>
+        {% elif step_success[2] %}
+        <div class="message success">{{ step_success[2]|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="step {{ '' if has_data and has_strategies else 'disabled' }}">
+        <h2>Step 3 — Launch your dashboard</h2>
+        <p>{% if has_data and has_strategies %}You’re all set. Open the dashboard to explore KPIs, charts, and the editable trade table.{% else %}Finish the previous steps to unlock the dashboard quick launch.{% endif %}</p>
+        <a href="/dash/" class="cta-button" {% if not (has_data and has_strategies) %}aria-disabled="true"{% endif %} target="_blank" rel="noopener">Open dashboard</a>
+      </div>
+    </div>
+  </body>
+  <script>
+    const fileInput = document.getElementById("file-input");
+    const label = document.getElementById("upload-label");
+    if (fileInput && label) {
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (file) {
+          label.textContent = `${file.name}`;
+          label.style.color = "#8effe5";
+        } else {
+          label.textContent = "Click to choose your trade history CSV";
+          label.style.color = "";
+        }
+      });
+    }
+  </script>
+</html>
